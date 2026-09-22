@@ -1,7 +1,7 @@
 // SPDX-License-Identifer: MIT
 pragma solidity ^0.8.28;
 
-contract Mytoken {
+contract MyToken {
     string public name;
     string public symbol;
     uint8 public decimals; // 
