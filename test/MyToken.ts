@@ -33,25 +33,41 @@ describe("mytoken deploy", () => {
             expect(await myTokenC.totalSupply()).equal(mintingAmount * 10n ** decimal);
         });
     });
-    describe("transfer", () => {
-
+    describe("Mint", () => {
         it("should return 1MT balance for singer 0", async () => {
             const singer0 = signers[0];
             expect(await myTokenC.totalSupply()).equal(mintingAmount*10n**decimal);
         });
+    })
+    describe("transfer", () => {
         //1MT = 1*10^18
         it("should have 0.5MT", async () => {
+            const signer0 = signers[0];
             const singer1 = signers[1];
-            await myTokenC.transfer(hre.ethers.parseUnits("0.5", 18), singer1.address);
+            await expect ( 
+                myTokenC.transfer(
+                    hre.ethers.parseUnits("0.5", 18), 
+                    singer1.address
+                )).to.emit(
+                    myTokenC, 
+                    "Transfer"
+                ).withArgs(
+                    signer0.address, 
+                singer1.address, 
+                hre.ethers.parseUnits("0.5", decimal)
+            );
             expect(await myTokenC.balanceOf(singer1)).equal(
-                hre.ethers.parseUnits("0.5", 18)
+                hre.ethers.parseUnits("0.5", decimal)
             );
         });
         it("should be reverted with insufficient balance error", async () => {
         const singer1 = signers[1];
         await expect(
-            myTokenC.transfer(hre.ethers.parseUnits((mintingAmount + 1n).toString(), decimal), singer1.address)
-        ).to.be.revertedWith("Insufficient balance");
+            myTokenC.transfer(
+                hre.ethers.parseUnits((mintingAmount + 1n).toString(), decimal), 
+                singer1.address
+            )
+        ).to.be.revertedWith("insufficient balance");
         });
     });
 })
