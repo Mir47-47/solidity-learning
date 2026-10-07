@@ -96,5 +96,51 @@ describe("mytoken deploy", () => {
                 )
             ).to.be.revertedWith("insufficient allowance");
         });
+        it("should transfer 0.5MT from signer0 to signer1", async () => {
+            const signer0 = signers[0];
+            const signer1 = signers[1];
+
+            const amount = hre.ethers.parseUnits("47", decimal);
+            const initialBalance = mintingAmount * 10n ** decimal;
+
+            const printBalances = async (label: string) => {
+                const signer0Balance = await myTokenC.balanceOf(signer0.address);
+                const signer1Balance = await myTokenC.balanceOf(signer1.address);
+                        
+                console.log(label);
+                console.log(
+                    "signer0:",
+                    hre.ethers.formatUnits(signer0Balance, decimal),
+                    "MT"
+                );
+                console.log(
+                    "signer1:",
+                    hre.ethers.formatUnits(signer1Balance, decimal),
+                    "MT"
+                );
+            };
+
+            // signer0가 signer1에게 사용할 수 있도록 승인
+            await myTokenC.approve(signer1.address, amount);
+
+            await printBalances("transferFrom 전");
+
+            // signer1이 signer0의 토큰을 signer1에게 전송
+            await myTokenC.connect(signer1).transferFrom(
+                signer0.address,
+                signer1.address,
+                amount
+            );
+        
+            await printBalances("transferFrom 후");
+
+            // signer0의 잔액 확인
+            expect(await myTokenC.balanceOf(signer0.address)).equal(
+                initialBalance - amount
+            );
+        
+            // signer1의 잔액 확인
+            expect(await myTokenC.balanceOf(signer1.address)).equal(amount);
+        });
     });
 });;
