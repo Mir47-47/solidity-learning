@@ -1,7 +1,7 @@
 import hre from "hardhat";
 import { expect } from "chai";
 import { DECIMALS, MINTING_AMOUNT } from "./constants";
-import { describe } from "node:test";
+// import { describe } from "node:test";
 
 describe("TinyBank", () => {
     let signers: HardhatEthersSinger[];
@@ -42,16 +42,17 @@ describe("TinyBank", () => {
                 await tinyBankC.totalStaked()
             );
         });
+    });
 
-        describe("Withdraw", () => {
-            it("should return 0 staked after withdrawing total token", async () => {
-                const signer0 = signers[0];
-                const stakingAmount = hre.ethers.parseUnits("50", DECIMALS);
-                await myTokenC.approve(await tinyBankC.getAddress(), stakingAmount);
-                await tinyBankC.stake(stakingAmount);
-                await tinyBankC.withdraw(stakingAmount);
-                expect(await tinyBankC.staked(signer0.address)).equal(0);
-            });
+    describe("Withdraw", () => {
+        it("should return 0 staked after withdrawing total token", async () => {
+            const signer0 = signers[0];
+            const stakingAmount = hre.ethers.parseUnits("50", DECIMALS);
+            await myTokenC.approve(await tinyBankC.getAddress(), stakingAmount);
+            await tinyBankC.stake(stakingAmount);
+            await tinyBankC.withdraw(stakingAmount);
+            expect(await tinyBankC.staked(signer0.address)).equal(0);
         });
     });
+
 });
