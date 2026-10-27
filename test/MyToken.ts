@@ -1,15 +1,12 @@
 import hre from "hardhat";
 import { expect } from "chai";
 import { MyToken } from "../typechain-types";
-import { HardhatEthersSinger } from "@nomicfoundation/hardhat-ethers/signers";
+import { HardhatEthersSigner } from "@nomicfoundation/hardhat-ethers/signers";
 import { DECIMALS, MINTING_AMOUNT } from "./constants";
-
-const MINTING_AMOUNT = 100n;
-const DECIMALS = 18n;
 
 describe("mytoken deploy", () => {
     let myTokenC: MyToken;
-    let signers: HardhatEthersSinger[];
+    let signers: HardhatEthersSigner[];
     //다같이 myTokenC를 쓰기위해서 밖에서 정의해준다.
     beforeEach("should deploy", async () => {//이 그룹 실행전에 실행되는 함수
         signers = await hre.ethers.getSigners();
@@ -118,17 +115,6 @@ describe("mytoken deploy", () => {
         //         const signer0Balance = await myTokenC.balanceOf(signer0.address);
         //         const signer1Balance = await myTokenC.balanceOf(signer1.address);
                         
-        //         console.log(label);
-        //         console.log(
-        //             "signer0:",
-        //             hre.ethers.formatUnits(signer0Balance, DECIMALS),
-        //             "MT"
-        //         );
-        //         console.log(
-        //             "signer1:",
-        //             hre.ethers.formatUnits(signer1Balance, DECIMALS),
-        //             "MT"
-        //         );
         //     };
 
         //     // signer0가 signer1에게 사용할 수 있도록 승인

@@ -13,9 +13,6 @@
 //         };
 //         const txHash = await bobWallet.sendTransaction(tx);//보내고 transaction 해쉬값을 받음
 //         const receipt = await txHash.wait();//트랜잭션이 블록에 포함될때까지 기다린다. 그리고 receipt를 받는다.
-//         console.log(await hre.ethers.provider.getTransaction(txHash.hash));//트랜잭션 해쉬값을 이용해서 트랜잭션을 가져온다.
-//         console.log("-----------------------------")
-//         console.log(receipt);
 //     });
 
 //     it("ethers test", async () => {
@@ -37,8 +34,6 @@
 //         const populatedTx = await bobWallet.populateTransaction(tx);//트랜잭션을 보내기전에 트랜잭션에 필요한 값들을 채워준다.
 //         const signedTx = await bobWallet.signTransaction(populatedTx);
 //         const txHash = await provider.send("eth_sendRawTransaction", [signedTx])//우리가 열어놓은 provider를 이용해서 트랜잭션을 보내고 트랜잭션 해쉬값을 받는다.
-//         console.log(ethers.formatEther(await provider.getBalance(bobWallet.address)));
-//         console.log(ethers.formatEther(await provider.getBalance(aliceWallet.address)));
         
 //     })
 
