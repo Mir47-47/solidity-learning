@@ -28,6 +28,7 @@ contract TinyBank is ManagedAccess {
 
     constructor(IMyToken _stakingToken) ManagedAccess(msg.sender, msg.sender) {
         stakingToken = _stakingToken;
+        rewardPerBlock = defaultRewardPerBlock;
     }
 
     modifier updateReward(address to) {
