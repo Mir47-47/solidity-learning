@@ -33,9 +33,13 @@ describe("mytoken deploy", () => {
     });
 
     describe("Mint", () => {
-        it("should return 1MT balance for singer 0", async () => {
+        it("should return initial supply + 1MT balance for singer 0", async () => {
             const singer0 = signers[0];
-            expect(await myTokenC.totalSupply()).equal(MINTING_AMOUNT*10n**DECIMALS);
+            const oneMt = hre.ethers.parseUnits("1", DECIMALS);
+            await myTokenC.mint(oneMt, singer0.address);
+            expect(await myTokenC.balanceOf(singer0.address)).equal(
+                MINTING_AMOUNT*10n**DECIMALS + oneMt
+            );
         });
 
         it("should return or revert when minting infinitly", async () => {
