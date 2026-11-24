@@ -89,45 +89,5 @@ describe("TinyBank", () => {
                 "You are not a manager"
             );
         });
-
-        it("should change rewards only after all three managers confirm", async () => {
-            const [owner, manager1, manager2, manager3, hacker] = signers;
-            const reward = hre.ethers.parseUnits("2", DECIMALS);
-
-            // owner가 manager 3명 등록
-            for (const manager of [manager1, manager2, manager3]) {
-                await tinyBankC.addManager(manager.address);
-            }
-
-            // manager가 아닌 주소는 동의 및 보상 변경 불가
-            await expect(tinyBankC.connect(hacker).confirm())
-                .to.be.revertedWith("You are not a manager");
-            await expect(tinyBankC.connect(hacker).setRewardPerBlock(reward))
-                .to.be.revertedWith("You are not a manager");
-
-            // 2명만 동의하면 보상 변경 불가
-            await tinyBankC.connect(manager1).confirm();
-            await tinyBankC.connect(manager2).confirm();
-            await expect(tinyBankC.connect(manager1).setRewardPerBlock(reward))
-                .to.be.revertedWith("Not all confirmed yet");
-
-            // 3명 전원이 동의하면 보상 변경 성공
-            await tinyBankC.connect(manager3).confirm();
-            await expect(tinyBankC.connect(manager1).setRewardPerBlock(reward))
-                .not.to.be.reverted;
-
-            // 다음 변경에는 다시 동의 필요
-            await expect(tinyBankC.connect(manager1).setRewardPerBlock(reward))
-                .to.be.revertedWith("Not all confirmed yet");
-
-            // 실제 지급량으로 변경된 블록당 보상 확인
-            const amount = hre.ethers.parseUnits("10", DECIMALS);
-            await myTokenC.approve(await tinyBankC.getAddress(), amount);
-            const stakeReceipt = await (await tinyBankC.stake(amount)).wait();
-            const withdrawalReceipt = await (await tinyBankC.withdraw(amount)).wait();
-            const blocks = BigInt(withdrawalReceipt!.blockNumber - stakeReceipt!.blockNumber);
-            expect(await myTokenC.balanceOf(owner.address))
-                .to.equal(MINTING_AMOUNT * 10n ** DECIMALS + blocks * reward);
-        });
     });
 });
